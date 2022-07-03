@@ -17,18 +17,45 @@ configurations {
 repositories {
     mavenCentral()
 }
+ext {
+
+    modelMapperVersion   = '3.1.0'
+    mockitoVersion       = '4.6.1'
+    mockitoJUnit5Version = '2.23.0'
+
+
+    db = [
+            mysql: "mysql:mysql-connector-java",
+            h2: "com.h2database:h2"
+    ]
+
+    spring = [
+            data      : "org.springframework.boot:spring-boot-starter-data-jpa",
+            web       : "org.springframework.boot:spring-boot-starter-web",
+            webflux   : "org.springframework.boot:spring-boot-starter-webflux",
+            validation: "org.springframework.boot:spring-boot-starter-validation",
+            devtools  : "org.springframework.boot:spring-boot-devtools",
+            test      : "org.springframework.boot:spring-boot-starter-test"
+    ]
+
+    misc = [
+            lombok       : "org.projectlombok:lombok",
+            modelMapper  : "org.modelmapper:modelmapper:$modelMapperVersion",
+            reactor_test : "io.projectreactor:reactor-test",
+            mockito      : "org.mockito:mockito-core:$mockitoVersion",
+            mockitoJUnit5: "org.mockito:mockito-junit-jupiter:$mockitoJUnit5Version"
+    ]
+}
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.h2database:h2'
-    runtimeOnly 'mysql:mysql-connector-java'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.projectreactor:reactor-test'
+    implementation spring.data, spring.web, spring.webflux, spring.validation, spring.devtools
+    implementation misc.modelMapper
+    compileOnly misc.lombok
+    developmentOnly spring.devtools
+    runtimeOnly db.h2, db.mysql
+    annotationProcessor misc.lombok
+    testImplementation spring.test, misc.reactor_test
+    testImplementation misc.mockito
 }
 
 tasks.named('test') {
